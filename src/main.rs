@@ -1,36 +1,10 @@
+extern crate dining_philosophers;
+
 use std::thread;
-use std::time::Duration;
 use std::sync::{Mutex, Arc};
 
-struct Philosopher {
-    name: String,
-    left: usize,
-    right: usize,
-}
-
-impl Philosopher {
-    fn new(name: &str, left: usize, right: usize) -> Philosopher {
-        Philosopher {
-            name: name.to_string(),
-            left: left,
-            right: right
-        }
-    }
-
-    fn eat(&self, table: &Table) {
-        let _left = table.forks[self.left].lock().unwrap();
-        thread::sleep(Duration::from_millis(150));
-        let _right = table.forks[self.right].lock().unwrap();
-
-        println!("{} is eating.", self.name);
-        thread::sleep(Duration::from_millis(3000));
-        println!("{} is done eating.", self.name);
-    }
-}
-
-struct Table {
-    forks: Vec<Mutex<()>>,
-}
+use dining_philosophers::philosophers::Philosopher;
+use dining_philosophers::philosophers::Table;
 
 fn main() {
     let table = Arc::new(Table {forks: vec![
